@@ -58,19 +58,19 @@ public:
       test_assignInit_standardToEmpty();
       test_assignInit_emptyToStandard();
       test_assignInit_standardToNotempty();
-//      test_swap_emptyToEmpty();
-//      test_swap_standardToEmpty();
-//      test_swap_emptyToStandard();
-//      test_swap_standardToStandard();
-//
-//      // Iterator
-//      test_begin_empty();
-//      test_begin_standard();
-//      test_end_standard();
-//      test_iterator_increment_standardToChild();
-//      test_iterator_increment_standardToParent();
-//      test_iterator_dereference_standardRead();
-//
+      test_swap_emptyToEmpty();
+      test_swap_standardToEmpty();
+      test_swap_emptyToStandard();
+      test_swap_standardToStandard();
+
+      // Iterator
+      test_begin_empty();
+      test_begin_standard();
+      test_end_standard();
+      test_iterator_increment_standardToChild();
+      test_iterator_increment_standardToParent();
+      test_iterator_dereference_standardRead();
+
 //      // Access
 //      test_access_standardRootRead();
 //      test_access_standardLeftRead();

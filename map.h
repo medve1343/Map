@@ -98,7 +98,9 @@ public:
    }
    map & operator = (const std::initializer_list <Pairs> & il)
    {
-       
+       clear();
+       for(auto element :il)
+           bst.insert(element);
       return *this;
    }
    
@@ -145,14 +147,13 @@ public:
    }
    void insert(const std::initializer_list <Pairs>& il)
    {
+       
    }
 
    //
    // Remove
    //
-   void clear() noexcept
-   {
-   }
+   void clear() noexcept { bst.clear(); }
    size_t erase(const K& k);
    iterator erase(iterator it);
    iterator erase(iterator first, iterator last);
@@ -292,6 +293,8 @@ const V& map <K, V> ::at(const K& key) const
 template <typename K, typename V>
 void swap(map <K, V>& lhs, map <K, V>& rhs)
 {
+    std::swap(lhs.bst, rhs.bst);
+//    std::swap(lhs.numElements, rhs.numElements);
 }
 
 /*****************************************************
