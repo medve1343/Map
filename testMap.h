@@ -96,16 +96,16 @@ public:
 //      test_find_standardMissing();
 //
 //      // Insert
-//      test_insertCopy_empty();
-//      test_insertCopy_standardFront();
-//      test_insertCopy_standardMiddle();
-//      test_insertMove_empty();
-//      test_insertMove_standard();
-//
-//      // Remove
-//      test_clear_empty();
-//      test_clear_standard();
-//      test_erase_emptyKey();
+      test_insertCopy_empty();
+      test_insertCopy_standardFront();
+      test_insertCopy_standardMiddle();
+      test_insertMove_empty();
+      test_insertMove_standard();
+
+      // Remove
+      test_clear_empty();
+      test_clear_standard();
+      test_erase_emptyKey();
 //      test_erase_standardKey();
 //      test_erase_standardKeyMissing();
 //      test_erase_emptyIterator();
@@ -113,12 +113,12 @@ public:
 //      test_erase_standardIteratorMissing();
 //      test_erase_emptyRange();
 //      test_erase_standardRange();
-//
-//      // Status
-//      test_empty_empty();
-//      test_empty_standard();
-//      test_size_empty();
-//      test_size_standard();
+
+      // Status
+      test_empty_empty();
+      test_empty_standard();
+      test_size_empty();
+      test_size_standard();
 
       report("Map");
    }

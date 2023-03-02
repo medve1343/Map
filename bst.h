@@ -307,7 +307,34 @@ public:
 
    // increment and decrement
    iterator & operator ++ ();
-   iterator   operator ++ (int postfix)          { return *this;                                          }
+   iterator   operator ++ (int postfix)
+   {
+       // Check for null node
+       if(pNode == nullptr)
+          return *this;
+       
+       // Case when you have to go right one and dig all the way down left.
+       else if(pNode->pRight)
+       {
+          pNode = pNode->pRight;
+          while(pNode->pLeft)
+             pNode = pNode->pLeft;
+       }
+       // Case when the next consecutive number is parent.
+       else if(pNode->pRight == nullptr && pNode->pParent->pLeft == pNode)
+       {
+          pNode = pNode->pParent;
+       }
+       // Case when you have to go all the way up to grannys!
+       else if(pNode->pRight == nullptr && pNode->pParent->pRight == pNode)
+       {
+          while(pNode->pParent && pNode->pParent->pRight == pNode)
+             pNode = pNode->pParent;
+          pNode = pNode->pParent;
+       }
+       return *this;
+       
+   }
    iterator & operator -- ();
    iterator   operator -- (int postfix)          { return *this;;                                         }
 

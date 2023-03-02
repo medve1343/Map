@@ -110,7 +110,7 @@ public:
    class iterator;
    iterator begin() 
    { 
-      return iterator();
+      return iterator(bst.begin());
    }
    iterator end() 
    { 
@@ -134,16 +134,21 @@ public:
    //
    custom::pair<typename map::iterator, bool> insert(Pairs && rhs)
    {
-      return make_pair(iterator(), false);
+       auto pair = bst.insert(rhs);
+       
+      return make_pair(iterator(pair.first), pair.second);
    }
    custom::pair<typename map::iterator, bool> insert(const Pairs & rhs)
    {
-      return make_pair(iterator(), false);
+       auto pair = bst.insert(rhs);
+       return make_pair(iterator(pair.first), pair.second);
+//      return make_pair(iterator(), false);
    }
 
    template <class Iterator>
    void insert(Iterator first, Iterator last)
    {
+       
    }
    void insert(const std::initializer_list <Pairs>& il)
    {
@@ -161,8 +166,12 @@ public:
    //
    // Status
    //
-   bool empty() const noexcept { return false; }
-   size_t size() const noexcept { return 99; }
+   bool empty() const noexcept
+    {
+        return bst.numElements == 0;
+       
+   }
+   size_t size() const noexcept { return bst.numElements; }
 
 
 private:
@@ -189,12 +198,15 @@ public:
    //
    iterator()
    {
+       
    }
    iterator(const typename BST < pair <K, V> > :: iterator & rhs)
-   { 
+   {
+       this->it = rhs;
    }
    iterator(const iterator & rhs) 
-   { 
+   {
+       this->it = rhs.it;
    }
 
    //
@@ -202,6 +214,7 @@ public:
    //
    iterator & operator = (const iterator & rhs)
    {
+       this->it = rhs.it;
       return *this;
    }
 
@@ -216,7 +229,7 @@ public:
    //
    const pair <K, V> & operator * () const
    {
-      return *(new pair<K,V>);
+      return *it;
    }
 
    //
@@ -224,6 +237,8 @@ public:
    //
    iterator & operator ++ ()
    {
+       
+       it++;
       return *this;
    }
    iterator operator ++ (int postfix)
@@ -304,7 +319,12 @@ void swap(map <K, V>& lhs, map <K, V>& rhs)
 template <typename K, typename V>
 size_t map<K, V>::erase(const K& k)
 {
-   return size_t(99);
+    auto pair = Pairs(k, V());
+    auto it = find(k);
+    if (it == end())
+        return 0;
+    erase(it);
+    return 1;
 }
 
 /*****************************************************
