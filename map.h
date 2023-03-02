@@ -196,18 +196,9 @@ public:
    //
    // Construct
    //
-   iterator()
-   {
-       
-   }
-   iterator(const typename BST < pair <K, V> > :: iterator & rhs)
-   {
-       this->it = rhs;
-   }
-   iterator(const iterator & rhs) 
-   {
-       this->it = rhs.it;
-   }
+   iterator() : it(nullptr) {}
+   iterator(const typename BST < pair <K, V> > :: iterator & rhs): it(rhs) {}
+   iterator(const iterator & rhs): it(rhs.it) {}
 
    //
    // Assign
@@ -221,8 +212,8 @@ public:
    //
    // Compare
    //
-   bool operator == (const iterator & rhs) const { return false; }
-   bool operator != (const iterator & rhs) const { return false; }
+   bool operator == (const iterator & rhs) const { return (rhs.it.pNode == this->it.pNode); }
+   bool operator != (const iterator & rhs) const { return (rhs.it.pNode != this->it.pNode); }
 
    // 
    // Access
@@ -237,8 +228,7 @@ public:
    //
    iterator & operator ++ ()
    {
-       
-       it++;
+      it++;
       return *this;
    }
    iterator operator ++ (int postfix)
@@ -352,7 +342,9 @@ size_t map<K, V>::erase(const K& k)
 template <typename K, typename V>
 typename map<K, V>::iterator map<K, V>::erase(map<K, V>::iterator first, map<K, V>::iterator last)
 {
-   return iterator();
+   while (first != last && first != end())
+      first = bst.erase(first.it);
+   return last;
 }
 
 /*****************************************************
@@ -362,7 +354,7 @@ typename map<K, V>::iterator map<K, V>::erase(map<K, V>::iterator first, map<K, 
 template <typename K, typename V>
 typename map<K, V>::iterator map<K, V>::erase(map<K, V>::iterator it)
 {
-   return iterator();
+   return iterator(bst.erase(it.it));
 }
 
 }; //  namespace custom

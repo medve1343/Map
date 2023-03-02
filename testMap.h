@@ -64,12 +64,12 @@ public:
       test_swap_standardToStandard();
 
       // Iterator
-//      test_begin_empty();
-//      test_begin_standard();
-//      test_end_standard();
-//      test_iterator_increment_standardToChild();
-//      test_iterator_increment_standardToParent();
-//      test_iterator_dereference_standardRead();
+      test_begin_empty();
+      test_begin_standard();
+      test_end_standard();
+      test_iterator_increment_standardToChild();
+      test_iterator_increment_standardToParent();
+      test_iterator_dereference_standardRead();
 
       // Access
       test_access_standardRootRead();
@@ -106,13 +106,13 @@ public:
       test_clear_empty();
       test_clear_standard();
       test_erase_emptyKey();
-//      test_erase_standardKey();
-//      test_erase_standardKeyMissing();
-//      test_erase_emptyIterator();
-//      test_erase_standardIterator();
-//      test_erase_standardIteratorMissing();
-//      test_erase_emptyRange();
-//      test_erase_standardRange();
+      test_erase_standardKey();
+      test_erase_standardKeyMissing();
+      test_erase_emptyIterator();
+      test_erase_standardIterator();
+      test_erase_standardIteratorMissing();
+      test_erase_emptyRange();
+      test_erase_standardRange();
 
       // Status
       test_empty_empty();

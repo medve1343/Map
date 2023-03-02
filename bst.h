@@ -490,6 +490,11 @@ typename BST <T> ::iterator BST <T> :: erase(iterator & it)
    auto pDelete = it.pNode;
 
    ++itNext;
+
+   // Case 0: Is Root
+   if (pDelete == root)
+      root = itNext.pNode;
+
    // Case 1: No Children
    if(!it.pNode->pRight && !it.pNode->pLeft)
    {
@@ -503,11 +508,11 @@ typename BST <T> ::iterator BST <T> :: erase(iterator & it)
    else if(!it.pNode->pRight && it.pNode->pLeft)
    {
       it.pNode->pLeft->pParent = it.pNode->pParent;
-      if(it.pNode->pParent->pRight->data == it.pNode->data)
+      if(it.pNode->pParent && it.pNode->pParent->pRight->data == it.pNode->data)
       {
          it.pNode->pRight = it.pNode->pLeft;
       }
-      if(it.pNode->pParent->pLeft->data == it.pNode->data)
+      if(it.pNode->pParent && it.pNode->pParent->pLeft->data == it.pNode->data)
       {
          it.pNode->pParent->pLeft = it.pNode->pLeft;
       }
@@ -516,13 +521,12 @@ typename BST <T> ::iterator BST <T> :: erase(iterator & it)
       // Case 2b: One Right Child
    else if(!it.pNode->pLeft && it.pNode->pRight)
    {
-
       it.pNode->pRight->pParent = it.pNode->pParent;
-      if(it.pNode->pParent->pRight->data == it.pNode->data)
+      if(it.pNode->pParent && it.pNode->pParent->pRight->data == it.pNode->data)
       {
          it.pNode->pParent->pRight = it.pNode->pRight;
       }
-      if(it.pNode->pParent->pLeft->data == it.pNode->data)
+      if(it.pNode->pParent && it.pNode->pParent->pLeft->data == it.pNode->data)
       {
          it.pNode->pParent->pLeft = it.pNode->pRight;
       }
