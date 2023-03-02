@@ -38,10 +38,10 @@ class TestSet;
 namespace custom
 {
 
-   template <class TT>
-   class set;
-   template <class KK, class VV>
-   class map;
+template <class TT>
+class set;
+template <class KK, class VV>
+class map;
 
 /*****************************************************************
  * BINARY SEARCH TREE
@@ -116,7 +116,7 @@ public:
 
    bool   empty() const noexcept { return (numElements == 0); }
    size_t size()  const noexcept { return numElements;        }
-   
+
 
 private:
 
@@ -132,8 +132,8 @@ private:
          _clear(pDest);
          return;
       }
-      
-      // Check if pDest exists.
+
+         // Check if pDest exists.
       else if (pDest == nullptr)
       {
          pDest = new BNode(pSrc->data);        // V
@@ -164,13 +164,13 @@ private:
       delete pThis;           // V
       pThis = nullptr;
    }
-   
+
    std::pair<BNode *, bool> _insert(BNode * pNode, const T & t, bool keepUnique)
    {
       // Equal case, but only check if we're keeping unique
       if (keepUnique && t == pNode->data)
          return {pNode, false};
-      // Less than - Left
+         // Less than - Left
       else if (t < pNode->data)
       {
          if (pNode->pLeft)
@@ -181,7 +181,7 @@ private:
             return {pNode->pLeft, true};
          }
       }
-      // Greater than or equal to - right
+         // Greater than or equal to - right
       else
       {
          if (pNode->pRight)
@@ -411,8 +411,8 @@ BST <T> & BST <T> :: operator = (BST <T> && rhs)
 template <typename T>
 void BST <T> :: swap (BST <T>& rhs)
 {
-    std::swap(root, rhs.root);
-    std::swap(numElements, rhs.numElements);
+   std::swap(root, rhs.root);
+   std::swap(numElements, rhs.numElements);
 }
 
 /*****************************************************
@@ -444,7 +444,7 @@ std::pair<typename BST <T> ::iterator, bool> BST <T> ::insert(T && t, bool keepU
    auto result = _insertMove(root, std::move(t), keepUnique);
    if (result.second) // If we inserted a new node, increment numElements
       numElements++;
-   
+
    return result;
 }
 
@@ -459,8 +459,12 @@ typename BST <T> ::iterator BST <T> :: erase(iterator & it)
    if (!it.pNode)
       return it;
 
+   auto itNext = it;
+   auto pDelete = it.pNode;
+
+   ++itNext;
    // Case 1: No Children
-   else if(!it.pNode->pRight && !it.pNode->pLeft)
+   if(!it.pNode->pRight && !it.pNode->pLeft)
    {
       if (it.pNode->isRightChild())
          it.pNode->pParent->pRight = nullptr;
@@ -468,7 +472,7 @@ typename BST <T> ::iterator BST <T> :: erase(iterator & it)
          it.pNode->pParent->pLeft = nullptr;
    }
 
-   // Case 2a: One Left Child
+      // Case 2a: One Left Child
    else if(!it.pNode->pRight && it.pNode->pLeft)
    {
       it.pNode->pLeft->pParent = it.pNode->pParent;
@@ -482,7 +486,7 @@ typename BST <T> ::iterator BST <T> :: erase(iterator & it)
       }
    }
 
-   // Case 2b: One Right Child
+      // Case 2b: One Right Child
    else if(!it.pNode->pLeft && it.pNode->pRight)
    {
 
@@ -497,35 +501,54 @@ typename BST <T> ::iterator BST <T> :: erase(iterator & it)
       }
    }
 
-   // Case 3: Two Children
+      // Case 3: Two Children
    else if(it.pNode->pLeft && it.pNode->pRight)
    {
-      auto itInOrderSuccessor = it.pNode->pRight;
-      while(itInOrderSuccessor->pLeft != nullptr)
-      {
-         itInOrderSuccessor = itInOrderSuccessor->pLeft;
-      }
-      // hold inOrderSuccessor's parent
-      auto inOrderRChild = itInOrderSuccessor->pRight;
-
-      // hold inOrderSuccessor's right child (it has no left)
-      it.pNode->pParent->pLeft = itInOrderSuccessor;
-      // set it->parent->child to itInOrderSuccessor
-      itInOrderSuccessor->pRight = it.pNode->pRight;
-      itInOrderSuccessor->pLeft = it.pNode->pLeft;
-      itInOrderSuccessor->pRight->pLeft = inOrderRChild;
-
-      // set inOrderSuccessor's children to it's children
-      itInOrderSuccessor->pParent = it.pNode->pParent;
-      itInOrderSuccessor->pRight->pParent = itInOrderSuccessor;
-      itInOrderSuccessor->pLeft->pParent = itInOrderSuccessor;
-      inOrderRChild->pParent = itInOrderSuccessor->pRight;
       // adopt the orphan
+
+      // find the in-order successor
+      auto pIOS = pDelete->pRight;
+      while (pIOS->pLeft)
+         pIOS = pIOS->pLeft;
+
+      // pIOS must not have a left????? node
+      assert(pIOS->pLeft == nullptr);
+      // take the place of pDelete
+      pIOS->pLeft = pDelete->pLeft;
+      if (pDelete->pLeft)
+         pDelete->pLeft->pParent = pIOS;
+
+      // If pIOS is not direct right sibling, swap it with pDelete
+      if (pDelete->pRight != pIOS)
+      {
+         // if the IOS has a right child, then it takes his place
+         if (pIOS->pRight)
+            pIOS->pRight->pParent = pIOS->pParent;
+         pIOS->pParent->pLeft = pIOS->pRight;
+
+         // make IOS's right child pDelete's right child
+         assert(pDelete->pRight);
+         pIOS->pRight = pDelete->pRight;
+         pDelete->pRight->pParent = pIOS;
+      }
+
+      // hook up pIOS's successor
+      pIOS->pParent = pDelete->pParent;
+      if (pDelete->pParent && pDelete->pParent->pLeft == pDelete)
+         pDelete->pParent->pLeft = pIOS;
+      else if (pDelete->pParent && pDelete->pParent->pRight == pDelete)
+         pDelete->pParent->pRight = pIOS;
+
+      // In case pDelete is the root
+      if (pDelete == root)
+         root = pIOS;
+
+      itNext = iterator(pIOS);
+
    }
-   delete it.pNode;
-   it.pNode = nullptr;
    numElements--;
-   return it;
+   delete pDelete;
+   return itNext;
 }
 
 /*****************************************************
@@ -546,7 +569,7 @@ void BST <T> ::clear() noexcept
 template <typename T>
 typename BST <T> :: iterator custom :: BST <T> :: begin() const noexcept
 {
-   
+
    if(empty())
       return end();
    auto p = root;
@@ -584,7 +607,7 @@ typename BST <T> :: iterator BST<T> :: find(const T & t)
  ******************************************************
  ******************************************************/
 
- 
+
 /******************************************************
  * BINARY NODE :: ADD LEFT
  * Add a node to the left of the current node
@@ -679,20 +702,20 @@ typename BST <T> :: iterator & BST <T> :: iterator :: operator ++ ()
    // Check for null node
    if(pNode == nullptr)
       return *this;
-   
-   // Case when you have to go right one and dig all the way down left.
+
+      // Case when you have to go right one and dig all the way down left.
    else if(pNode->pRight)
    {
       pNode = pNode->pRight;
       while(pNode->pLeft)
          pNode = pNode->pLeft;
    }
-   // Case when the next consecutive number is parent.
+      // Case when the next consecutive number is parent.
    else if(pNode->pRight == nullptr && pNode->pParent->pLeft == pNode)
    {
       pNode = pNode->pParent;
    }
-   // Case when you have to go all the way up to grannys!
+      // Case when you have to go all the way up to grannys!
    else if(pNode->pRight == nullptr && pNode->pParent->pRight == pNode)
    {
       while(pNode->pParent && pNode->pParent->pRight == pNode)
